@@ -9,7 +9,7 @@ const send = (data) => {
     return conn.createChannel();
       }).then(function(ch) {
         return ch.assertQueue(q, {durable: true}).then(function(ok) {
-            return ch.sendToQueue(q, new Buffer(JSON.stringify(data)) );
+            return ch.sendToQueue(q, new Buffer(JSON.stringify(data), {persistent: true}) );
         });
       }).catch(console.warn);
 }
