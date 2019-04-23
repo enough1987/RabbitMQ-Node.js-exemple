@@ -1,5 +1,5 @@
 // ---- producer program
-var q = 'tasks';
+var q = 'task_queue';
 
 var open = require('amqplib').connect('amqp://localhost');
   
@@ -8,7 +8,7 @@ const send = (data) => {
   return open.then(function(conn) {
     return conn.createChannel();
       }).then(function(ch) {
-        return ch.assertQueue(q).then(function(ok) {
+        return ch.assertQueue(q, {durable: true}).then(function(ok) {
             return ch.sendToQueue(q, new Buffer(JSON.stringify(data)) );
         });
       }).catch(console.warn);

@@ -1,5 +1,5 @@
 // ---- consumer program
-var q = 'tasks';
+var q = 'task_queue';
 
 var open = require('amqplib').connect('amqp://localhost');
   
@@ -8,13 +8,13 @@ const resive = () => {
   return open.then(function(conn) {
       return conn.createChannel();
     }).then(function(ch) {
-      return ch.assertQueue(q).then(function(ok) {
+      return ch.assertQueue(q, {durable: true}).then(function(ok) {
         return ch.consume(q, function(msg) {
           if (msg !== null) {
             console.log(JSON.parse(msg.content));
-            //ch.ack(msg);
+            ch.ack(msg);
           }
-        }, {noAck: true});
+        }, {noAck: false});
       });
     }).catch(console.warn);
 }
